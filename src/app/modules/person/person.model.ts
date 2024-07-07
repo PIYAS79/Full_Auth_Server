@@ -34,7 +34,10 @@ const Person_Schema = new Schema<Person_Type>({
         type: String,
         required: [true, "Phone number is important *"]
     },
-    user: Schema.Types.ObjectId
+    user: {
+        type:Schema.Types.ObjectId,
+        ref:'User'
+    }
 }, {
     toJSON: {
         virtuals: true

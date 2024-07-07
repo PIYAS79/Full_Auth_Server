@@ -1,5 +1,6 @@
 import config from "../../config";
 import { Encode_JWT_Token } from "../../utils/jwt.operations";
+import { SendEmail } from "../../utils/nodeMailer";
 import { Person_Type } from "../person/person.interface";
 import { Person_Model } from "../person/person.model";
 import { Create_User_Type, User_Type } from "./user.interface";
@@ -41,7 +42,12 @@ const User_Register_Service = async (gettedData: Create_User_Type) => {
         role: gettedData.role
     }, config.ref_token_exp as string);
 
-    return {person,accessToken,refreshToken};
+    const html = ` <h1>Welcome from FULL_AUTH Serice LTD.</h1>
+                   <p>
+                   Congratulation form FULL_AUTH Service LTD for create a account with us!
+                   </p>`
+    await SendEmail(gettedData.email,html,"Welcome to FULL_AUTH Service LTD !")
+    return { person, accessToken, refreshToken };
 }
 
 
