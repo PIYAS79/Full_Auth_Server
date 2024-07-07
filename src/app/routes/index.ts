@@ -1,3 +1,4 @@
+import { auth_Router } from "../modules/auth/auth.router";
 import { User_Routes } from "../modules/user/user.router";
 import express from 'express';
 const router = express.Router();
@@ -5,8 +6,12 @@ const router = express.Router();
 
 const projectRoutes = [
     {
-        path:'/register',
+        path:'/user',
         route:User_Routes
+    },
+    {
+        path:'/auth',
+        route:auth_Router
     },
 ]
 

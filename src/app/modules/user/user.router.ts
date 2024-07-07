@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 // Create Person / Registration route
-router.post('/', validation_Request(Zod_Create_User_Type), User_Controllers.User_Register_Controller);
+router.post('/register', validation_Request(Zod_Create_User_Type), User_Controllers.User_Register_Controller);
 
 
 

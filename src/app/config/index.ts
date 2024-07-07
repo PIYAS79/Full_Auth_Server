@@ -12,7 +12,8 @@ export default {
     jwt_secret:process.env.JWT_SECRET,
     acc_token_exp:process.env.ACCESS_TOKEN_EXP,
     ref_token_exp:process.env.REFRESH_TOKEN_EXP,
-    mail_secret:process.env.MAIL_SECRET
+    mail_secret:process.env.MAIL_SECRET,
+    salt_round:process.env.BCRYPT_SALT_ROUND
 }
 
 

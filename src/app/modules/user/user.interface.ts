@@ -22,4 +22,3 @@ export type Create_User_Type = {
 }
 
 
-

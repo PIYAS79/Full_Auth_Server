@@ -46,4 +46,14 @@ const Person_Schema = new Schema<Person_Type>({
 })
 
 
+Person_Schema.virtual('full_name').get(function(){
+    if(this?.name?.m_name){
+        return `${this.name.f_name} ${this.name.m_name} ${this.name.l_name}`
+    }else{
+        return `${this.name.f_name} ${this.name.l_name}`
+    }
+})
+
+
+
 export const Person_Model = model<Person_Type>("Person", Person_Schema);

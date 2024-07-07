@@ -1,11 +1,12 @@
 import { Schema, model } from "mongoose";
 import { User_Type } from "./user.interface";
+import { Encode_Password_By_Bcrypt } from "../../utils/bcrypt.operation";
 
 
 const User_Schema = new Schema<User_Type>({
     email: {
         type: String,
-        unique:true,
+        unique: true,
         required: [true, "Email is a required field"]
     },
     isBlock: {
@@ -40,4 +41,18 @@ const User_Schema = new Schema<User_Type>({
 
 
 
-export const User_Model = model<User_Type>('User',User_Schema);
+// encode the password by the bcrypt 
+User_Schema.pre('save', async function (next) {
+    const data = this;
+    data.password = await Encode_Password_By_Bcrypt(this.password);
+    next();
+})
+
+User_Schema.post('save', function (doc, next) {
+    doc.password = '';
+    next();
+})
+
+
+
+export const User_Model = model<User_Type>('User', User_Schema);
