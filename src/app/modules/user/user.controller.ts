@@ -8,12 +8,15 @@ import { User_Services } from "./user.services";
 const User_Register_Controller = Async_Catch(async(req:Request,res:Response,next:NextFunction)=>{
     const gettedData = req.body;
 
-    const result = await User_Services.User_Register_Service(gettedData); 
+    const {person,accessToken,refreshToken} = await User_Services.User_Register_Service(gettedData); 
 
-    res.status(httpStatus.OK).json({
+    res.cookie('refreshToken',refreshToken,{
+        httpOnly:true,
+        secure:true
+    }).status(httpStatus.OK).json({
         success:true,
         message: "Successfully Registerd !",
-        data : result
+        data : {person,accessToken}
     })
 })
 
