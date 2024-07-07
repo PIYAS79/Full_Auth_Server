@@ -3,6 +3,7 @@ import cors from 'cors';
 import httpStatus from 'http-status';
 import { notFound_Error_Route } from './errors/NotFoundErrorRoute';
 import { global_Error_handler } from './errors/globalErrorHandler';
+import router from './routes';
 
 
 const app = express();
@@ -20,6 +21,9 @@ app.get('/',(req:Request,res:Response,next:NextFunction)=>{
         data:{}
     })
 })
+
+// Primary Route
+app.use('/api/v1',router);
 
 // route not found - route
 app.use("*",notFound_Error_Route)

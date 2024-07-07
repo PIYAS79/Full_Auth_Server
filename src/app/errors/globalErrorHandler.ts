@@ -1,12 +1,43 @@
-import { NextFunction, Request, Response } from "express"
+import { NextFunction, Request, Response } from "express";
+import {ZodError} from 'zod'
 import httpStatus from "http-status"
+import { errorSource_Type } from "../global/Interfaces";
 
 
-export const global_Error_handler = (err:any,req:Request,res:Response,next:NextFunction)=>{
-    if(err){
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success:false,
-            message:"There is a server side error 💥"
-        })
+export const global_Error_handler = (err: any, req: Request, res: Response, next: NextFunction) => {
+
+    let statusCode = 500;
+    let errorTitle = "There is a server side error !";
+    let errorSource: errorSource_Type = [{
+        path: "",
+        message: ''
+    }]
+
+    const zodErrorFormatter = (err:ZodError)=>{
+        const errorTitle = "Validation Error - Zod";
+        const errorSource:errorSource_Type=err.issues.map(one=>({
+            path:one.path[one.path.length-1],
+            message:one.message
+        }))
+        return {errorSource,errorTitle};
     }
+
+    if(err.name==='ZodError'){
+        const gettedFormat = zodErrorFormatter(err);
+        errorTitle = gettedFormat.errorTitle;
+        errorSource = gettedFormat.errorSource;
+    }
+
+
+
+
+
+
+    res.status(statusCode).json({
+        success: false,
+        errorTitle,
+        errorSource,
+        stack:err.stack,
+        err
+    })
 }
