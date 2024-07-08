@@ -7,12 +7,15 @@ import httpStatus from "http-status";
 
 const Login_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:NextFunction)=>{
     const gettedData = req.body;
-    const result = await Auth_Services.Login_Auth_Service(gettedData);
+    const {user,AccessToken,RefreshToken} = await Auth_Services.Login_Auth_Service(gettedData);
 
-    res.status(httpStatus.OK).json({
+    res.cookie('refreshToken',RefreshToken,{
+        httpOnly:true,
+        secure:true
+    }).status(httpStatus.OK).json({
         success:true,
         message:"Successfully Login User",
-        data:result
+        data:{user,AccessToken}
     })
 })
 
