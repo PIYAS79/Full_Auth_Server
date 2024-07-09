@@ -6,6 +6,7 @@ import { Decode_JWT_Token, Encode_JWT_Token } from "../../utils/jwt.operations";
 import config from "../../config";
 import { Change_Pass_Type, Login_Type } from "./auth.interface";
 import { JwtPayload } from "jsonwebtoken";
+import { SendEmail } from "../../utils/nodeMailer";
 
 
 // login user route
@@ -77,10 +78,33 @@ const Refresh_Token_Auth_Service = async (refToken:string) =>{
     },(config.acc_token_exp as string));
     return {accToken};
 }
+// forget password route
+const Forget_Pass_Auth_Service=async(email:string)=>{
+    // check if the user is exist or not by the email
+    const user = await User_Model.findOne({email:email});
+    if(!user){
+        throw new Final_App_Error(httpStatus.NOT_FOUND,"User not found *");
+    }
+    // check if the user is block or not 
+    if(user.isBlock){
+        throw new Final_App_Error(httpStatus.UNAUTHORIZED,"User is blocked *");
+    }
+    // if all ok then send the short time token for reset the password 
+    const shortToken = Encode_JWT_Token({
+        email:user.email,
+        role:user.role
+    },'5m')
+    // send this token to user email
+    const html = `${config.client_url}?email=${user.email}&token=${shortToken}`;
+    SendEmail(user.email,html,"FULL_AUTH Reset Password Link");
+
+    return {shortToken}
+}
 
 
 export const Auth_Services = {
     Login_Auth_Service,
     Change_Password_Auth_Service,
-    Refresh_Token_Auth_Service
+    Refresh_Token_Auth_Service,
+    Forget_Pass_Auth_Service
 }

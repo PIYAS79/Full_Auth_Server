@@ -24,3 +24,10 @@ export const Zod_Cookie_Type = z.object({
         })
     })
 })
+
+
+export const Zod_Forget_Type = z.object({
+    body:z.object({
+        email:z.string().email()
+    })
+})

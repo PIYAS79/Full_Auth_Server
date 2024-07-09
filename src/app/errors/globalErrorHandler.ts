@@ -3,6 +3,7 @@ import {ZodError} from 'zod'
 import httpStatus from "http-status"
 import { errorSource_Type } from "../global/Interfaces";
 import Final_App_Error from "./Final_Error";
+import mongoose, { get } from "mongoose";
 
 
 export const global_Error_handler = (err: any, req: Request, res: Response, next: NextFunction) => {
@@ -22,10 +23,22 @@ export const global_Error_handler = (err: any, req: Request, res: Response, next
         }))
         return {errorSource,errorTitle};
     }
+    const castErrorHandler = (err:mongoose.Error.CastError)=>{
+        const ErrorTitle = "Reference not found error *";
+        const errorSource:errorSource_Type = [{
+            path:err.path,
+            message:err.message
+        }]
+        return {ErrorTitle,errorSource}
+    }
 
     if(err.name==='ZodError'){
         const gettedFormat = zodErrorFormatter(err);
         errorTitle = gettedFormat.errorTitle;
+        errorSource = gettedFormat.errorSource;
+    }else if(err.name === 'CastError'){
+        const gettedFormat = castErrorHandler(err);
+        errorTitle = gettedFormat.ErrorTitle;
         errorSource = gettedFormat.errorSource;
     }else if(err instanceof Error){
         errorTitle = err.message;

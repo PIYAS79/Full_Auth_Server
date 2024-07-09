@@ -39,6 +39,16 @@ const Refresh_Token_Auth_Controller = Async_Catch(async(req:Request,res:Response
         data:result
     })
 })
+const Forget_Pass_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:NextFunction)=>{
+    const gettedData = req.body.email;
+    const result = await Auth_Services.Forget_Pass_Auth_Service(gettedData);
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        message:"Successfully forget issued! Check your email for the reset link !",
+        data:result
+    })
+})
 
 
 
@@ -46,5 +56,6 @@ const Refresh_Token_Auth_Controller = Async_Catch(async(req:Request,res:Response
 export const Auth_Controller = {
     Login_Auth_Controller,
     Change_Password_Auth_Controller,
-    Refresh_Token_Auth_Controller
+    Refresh_Token_Auth_Controller,
+    Forget_Pass_Auth_Controller
 }

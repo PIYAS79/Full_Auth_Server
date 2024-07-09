@@ -13,7 +13,8 @@ export default {
     acc_token_exp:process.env.ACCESS_TOKEN_EXP,
     ref_token_exp:process.env.REFRESH_TOKEN_EXP,
     mail_secret:process.env.MAIL_SECRET,
-    salt_round:process.env.BCRYPT_SALT_ROUND
+    salt_round:process.env.BCRYPT_SALT_ROUND,
+    client_url:process.env.CLIENT_URL
 }
 
 
