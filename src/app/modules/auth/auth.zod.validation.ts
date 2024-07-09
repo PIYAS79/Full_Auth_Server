@@ -16,3 +16,11 @@ export const Zod_Password_Change_Type = z.object({
         newPassword:z.string()
     })
 })
+
+export const Zod_Cookie_Type = z.object({
+    cookie:z.object({
+        refreshToken : z.string({
+            required_error:"refresh token is required for create a new access token *"
+        })
+    })
+})

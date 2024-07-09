@@ -29,11 +29,22 @@ const Change_Password_Auth_Controller = Async_Catch(async(req:Request,res:Respon
         data:result
     })
 })
+const Refresh_Token_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:NextFunction)=>{
+    const gettedData = req.cookies.refreshToken;
+    const result = await Auth_Services.Refresh_Token_Auth_Service(gettedData);
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        message:"Successfully Get New Access Token !",
+        data:result
+    })
+})
 
 
 
 
 export const Auth_Controller = {
     Login_Auth_Controller,
-    Change_Password_Auth_Controller
+    Change_Password_Auth_Controller,
+    Refresh_Token_Auth_Controller
 }

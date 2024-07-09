@@ -2,13 +2,13 @@ import httpStatus from "http-status";
 import Final_App_Error from "../../errors/Final_Error";
 import { User_Model } from "../user/user.model"
 import { Decode_Password_By_Bcrypt, Encode_Password_By_Bcrypt } from "../../utils/bcrypt.operation";
-import { Encode_JWT_Token } from "../../utils/jwt.operations";
+import { Decode_JWT_Token, Encode_JWT_Token } from "../../utils/jwt.operations";
 import config from "../../config";
 import { Change_Pass_Type, Login_Type } from "./auth.interface";
 import { JwtPayload } from "jsonwebtoken";
 
 
-
+// login user route
 const Login_Auth_Service = async (gettedData: Login_Type) => {
 
     // check if the user is exist or not 
@@ -37,7 +37,7 @@ const Login_Auth_Service = async (gettedData: Login_Type) => {
     // return 
     return { user, AccessToken, RefreshToken }
 }
-
+// change password route
 const Change_Password_Auth_Service = async (gettedData: Change_Pass_Type, decodedTokenData: JwtPayload) => {
     // find user by token email
     const user = await User_Model.findOne({ email: decodedTokenData.email });
@@ -57,11 +57,30 @@ const Change_Password_Auth_Service = async (gettedData: Change_Pass_Type, decode
     }, { new: true });
     return result;
 }
-
-
+// get access token by the refresh token route
+const Refresh_Token_Auth_Service = async (refToken:string) =>{
+    // decode token
+    const decodedData = Decode_JWT_Token(refToken) as JwtPayload;
+    // check if the user exist or not
+    const user = await User_Model.findOne({email:decodedData.email});
+    if(!user){
+        throw new Final_App_Error(httpStatus.NOT_FOUND,"User not found *");
+    }
+    // check if the role is match or not 
+    if(user?.role !== decodedData.role){
+        throw new Final_App_Error(httpStatus.UNAUTHORIZED,"Your role is not match, contact with us");
+    }
+    // if all ok then give them a accesstoken 
+    const accToken = Encode_JWT_Token({
+        email:decodedData.email,
+        role:decodedData.role
+    },(config.acc_token_exp as string));
+    return {accToken};
+}
 
 
 export const Auth_Services = {
     Login_Auth_Service,
-    Change_Password_Auth_Service
+    Change_Password_Auth_Service,
+    Refresh_Token_Auth_Service
 }

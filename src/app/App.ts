@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import { notFound_Error_Route } from './errors/NotFoundErrorRoute';
 import { global_Error_handler } from './errors/globalErrorHandler';
 import router from './routes';
+import cookieParser from 'cookie-parser';
 
 
 const app = express();
@@ -11,6 +12,7 @@ const app = express();
 // middlewares 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 
 // initial route
