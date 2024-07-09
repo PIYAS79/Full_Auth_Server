@@ -14,8 +14,19 @@ const Login_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:Ne
         secure:true
     }).status(httpStatus.OK).json({
         success:true,
-        message:"Successfully Login User",
+        message:"Successfully Login User !",
         data:{user,AccessToken}
+    })
+})
+const Change_Password_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:NextFunction)=>{
+    const gettedData = req.body;
+    const decodedTokenData = req.user;
+    const result = await Auth_Services.Change_Password_Auth_Service(gettedData,decodedTokenData);
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        message:"Successfully Change Password !",
+        data:result
     })
 })
 
@@ -24,4 +35,5 @@ const Login_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:Ne
 
 export const Auth_Controller = {
     Login_Auth_Controller,
+    Change_Password_Auth_Controller
 }

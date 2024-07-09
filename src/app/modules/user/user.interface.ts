@@ -1,3 +1,4 @@
+import { Model } from "mongoose"
 import { Name_Type } from "../person/person.interface"
 
 
@@ -22,3 +23,6 @@ export type Create_User_Type = {
 }
 
 
+export interface User_Custom_Static_Method extends Model<User_Type>{
+    isTokenExpired(PassUpdatedAt:Date,iat:number):boolean
+}

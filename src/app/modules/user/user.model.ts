@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose";
-import { User_Type } from "./user.interface";
+import { User_Custom_Static_Method, User_Type } from "./user.interface";
 import { Encode_Password_By_Bcrypt } from "../../utils/bcrypt.operation";
 
 
-const User_Schema = new Schema<User_Type>({
+const User_Schema = new Schema<User_Type,User_Custom_Static_Method>({
     email: {
         type: String,
         unique: true,
@@ -53,6 +53,11 @@ User_Schema.post('save', function (doc, next) {
     next();
 })
 
+User_Schema.statics.isTokenExpired=function(pat:Date,iat:number){
+    const toNumber = new Date(pat).getTime()/1000;
+    return toNumber>iat;
+}
 
 
-export const User_Model = model<User_Type>('User', User_Schema);
+
+export const User_Model = model<User_Type,User_Custom_Static_Method>('User', User_Schema);

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {ZodError} from 'zod'
 import httpStatus from "http-status"
 import { errorSource_Type } from "../global/Interfaces";
+import Final_App_Error from "./Final_Error";
 
 
 export const global_Error_handler = (err: any, req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +27,18 @@ export const global_Error_handler = (err: any, req: Request, res: Response, next
         const gettedFormat = zodErrorFormatter(err);
         errorTitle = gettedFormat.errorTitle;
         errorSource = gettedFormat.errorSource;
+    }else if(err instanceof Error){
+        errorTitle = err.message;
+        errorSource=[{
+            path:'',
+            message:err.message
+        }]
+    }else if(err instanceof Final_App_Error){
+        errorTitle = err.message;
+        errorSource=[{
+            path:'',
+            message:err.message
+        }]
     }
 
 
