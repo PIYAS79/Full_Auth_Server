@@ -31,3 +31,10 @@ export const Zod_Forget_Type = z.object({
         email:z.string().email()
     })
 })
+
+export const Zod_Reset_Pass_Type = z.object({
+    body:z.object({
+        email:z.string().email(),
+        newPassword:z.string()
+    })
+})

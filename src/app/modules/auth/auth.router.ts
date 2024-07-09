@@ -1,6 +1,6 @@
 import express from 'express'
 import validation_Request from '../../middlewares/validation.request';
-import { Zod_Cookie_Type, Zod_Forget_Type, Zod_Login_Type, Zod_Password_Change_Type } from './auth.zod.validation';
+import { Zod_Cookie_Type, Zod_Forget_Type, Zod_Login_Type, Zod_Password_Change_Type, Zod_Reset_Pass_Type } from './auth.zod.validation';
 import { Auth_Controller } from './auth.controller';
 import verify_Token from '../../middlewares/token.validation';
 import { Role_Types } from '../../global/User_Role_Types';
@@ -16,7 +16,7 @@ router.post('/change',verify_Token(Role_Types.ADMIN,Role_Types.USER),validation_
 // forget password
 router.post('/forget',validation_Request(Zod_Forget_Type),Auth_Controller.Forget_Pass_Auth_Controller)
 // reset password
-
+router.patch('/reset',verify_Token(Role_Types.ADMIN,Role_Types.USER),validation_Request(Zod_Reset_Pass_Type),Auth_Controller.Reset_Pass_Auth_Controller)
 // get Accesstoken by refresh token
 router.get('/refresh',validation_Request(Zod_Cookie_Type),Auth_Controller.Refresh_Token_Auth_Controller);
 

@@ -49,6 +49,17 @@ const Forget_Pass_Auth_Controller = Async_Catch(async(req:Request,res:Response,n
         data:result
     })
 })
+const Reset_Pass_Auth_Controller = Async_Catch(async(req:Request,res:Response,next:NextFunction)=>{
+    const gettedData = req.body;
+    const shortToken = req.headers.authorization as string;
+    const result = await Auth_Services.Reset_Pass_Auth_Service(gettedData,shortToken);
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        message:"Successfully Reset Password !",
+        data:result
+    })
+})
 
 
 
@@ -57,5 +68,6 @@ export const Auth_Controller = {
     Login_Auth_Controller,
     Change_Password_Auth_Controller,
     Refresh_Token_Auth_Controller,
-    Forget_Pass_Auth_Controller
+    Forget_Pass_Auth_Controller,
+    Reset_Pass_Auth_Controller
 }
