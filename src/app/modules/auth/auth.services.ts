@@ -121,6 +121,9 @@ const Reset_Pass_Auth_Service = async (gettedData: Reset_Pass_Type, shortToken: 
         passwordUpdatedAt: new Date
     }, { new: true })
 
+    // send alert to email
+    const html = `<h1>Your password is reset successfully !</h1><p>If it's not you then come & <a href="">secure your account</a></p>`
+    SendEmail(user.email,html,"User password is reset successfully !");
     return result
 }
 
