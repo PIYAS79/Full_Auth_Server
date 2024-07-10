@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from 'zod'
-import httpStatus from "http-status"
 import { errorSource_Type } from "../global/Interfaces";
 import Final_App_Error from "./Final_Error";
-import mongoose, { get } from "mongoose";
+import mongoose from "mongoose";
 
 
 export const global_Error_handler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
-    let statusCode = 500;
+    let statusCode = err.statusCode|500;
     let errorTitle = "There is a server side error !";
     let errorSource: errorSource_Type = [{
         path: "",
@@ -41,6 +40,17 @@ export const global_Error_handler = (err: any, req: Request, res: Response, next
         })
         return { errorTitle, errorSource }
     }
+    const duplicateKeyError =(err:any)=>{
+        const regex = /{ email: "([^"]+)" }/;
+        const match = err.errmsg.match(regex);
+        const finalString = match[1];
+        const errorTitle = "Duplicatte key error";
+        const errorSouce:errorSource_Type=[{
+            path : '',
+            message : `${finalString} is already into the DB`
+        }]
+        return {errorTitle,errorSouce};
+    }
 
     if (err.name === 'ZodError') {
         const gettedFormat = zodErrorFormatter(err);
@@ -54,6 +64,10 @@ export const global_Error_handler = (err: any, req: Request, res: Response, next
         const gettedFormat = castErrorHandler(err);
         errorTitle = gettedFormat.ErrorTitle;
         errorSource = gettedFormat.errorSource;
+    }else if (err.code === 11000) {
+        const gettedFormat = duplicateKeyError(err);
+        errorTitle = gettedFormat.errorTitle;
+        errorSource = gettedFormat.errorSouce;
     } else if (err instanceof Error) {
         errorTitle = err.message;
         errorSource = [{
@@ -67,8 +81,6 @@ export const global_Error_handler = (err: any, req: Request, res: Response, next
             message: err.message
         }]
     }
-
-
 
 
 
